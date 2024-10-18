@@ -40,6 +40,28 @@ class LoginViewModel : ViewModel() {
 
     }
 
+    fun createUser(email: String, password: String, onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            try {
+                auth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            onSuccess()
+                        } else {
+                            Log.e(
+                                "LoginViewModel",
+                                "Error register in Firebase " + task.exception?.localizedMessage
+                            )
+                            showAlert = true
+                        }
+                    }
+            } catch (e: Exception) {
+                Log.e("LoginViewModel", "Error logging in " + e.localizedMessage)
+            }
+        }
+
+    }
+
     fun closeAlert() {
         showAlert = false
     }
