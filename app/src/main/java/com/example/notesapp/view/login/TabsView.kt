@@ -16,9 +16,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.example.notesapp.viewmodel.LoginViewModel
 
 @Composable
-fun TabsView(innerPadding: PaddingValues) {
+fun TabsView(innerPadding: PaddingValues = PaddingValues(top = 40.dp),
+             navController: NavController, loginViewModel: LoginViewModel
+) {
     var selectedTab by remember { mutableStateOf(0) }
     val tabs = listOf("Login", "Register")
 
@@ -40,8 +44,8 @@ fun TabsView(innerPadding: PaddingValues) {
         }
         //vistas del tab
         when(selectedTab) {
-            0 -> LoginView()
-            1 -> RegisterView()
+            0 -> LoginView(navController = navController, loginViewModel = loginViewModel)
+            1 -> RegisterView(navController = navController, loginViewModel = loginViewModel)
         }
     }
 }

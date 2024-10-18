@@ -21,10 +21,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.example.notesapp.viewmodel.LoginViewModel
 
 
 @Composable
-fun LoginView() {
+fun LoginView(navController: NavController, loginViewModel: LoginViewModel) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize()
@@ -60,9 +62,3 @@ fun LoginView() {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun LoginViewPreview(){
-    LoginView()
-
-}
