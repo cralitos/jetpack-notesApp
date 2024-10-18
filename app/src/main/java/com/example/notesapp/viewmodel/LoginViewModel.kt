@@ -11,6 +11,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class LoginViewModel : ViewModel() {
@@ -67,16 +68,20 @@ class LoginViewModel : ViewModel() {
         val id = auth.currentUser?.uid
         val email = auth.currentUser?.email
 
-        val user = UserModel(userId = id.toString(), email = email.toString(), userName = userName)
 
-        FirebaseFirestore.getInstance().collection("users")
-            .add(user)
-            .addOnSuccessListener {
-                Log.d("LoginViewModel", "User saved")
-            }
-            .addOnFailureListener {
-                Log.e("LoginViewModel", "Error saving user")
-            }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val user = UserModel(userId = id.toString(), email = email.toString(), userName = userName)
+            FirebaseFirestore.getInstance().collection("users")
+                .add(user)
+                .addOnSuccessListener {
+                    Log.d("LoginViewModel", "User saved")
+                }
+                .addOnFailureListener {
+                    Log.e("LoginViewModel", "Error saving user")
+                }
+        }
+
     }
 
     fun closeAlert() {
