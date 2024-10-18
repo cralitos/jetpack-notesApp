@@ -6,12 +6,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.notesapp.model.UserModel
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
-import kotlin.math.log
 
 class LoginViewModel : ViewModel() {
 
@@ -40,12 +40,13 @@ class LoginViewModel : ViewModel() {
 
     }
 
-    fun createUser(email: String, password: String, onSuccess: () -> Unit) {
+    fun createUser(email: String, password: String, username: String, onSuccess: () -> Unit) {
         viewModelScope.launch {
             try {
                 auth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
+                            saveUser(username)
                             onSuccess()
                         } else {
                             Log.e(
@@ -60,6 +61,22 @@ class LoginViewModel : ViewModel() {
             }
         }
 
+    }
+
+    private fun saveUser(userName: String) {
+        val id = auth.currentUser?.uid
+        val email = auth.currentUser?.email
+
+        val user = UserModel(userId = id.toString(), email = email.toString(), userName = userName)
+
+        FirebaseFirestore.getInstance().collection("users")
+            .add(user)
+            .addOnSuccessListener {
+                Log.d("LoginViewModel", "User saved")
+            }
+            .addOnFailureListener {
+                Log.e("LoginViewModel", "Error saving user")
+            }
     }
 
     fun closeAlert() {
