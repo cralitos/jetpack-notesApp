@@ -1,6 +1,9 @@
 package com.example.notesapp.viewmodel
 
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -13,6 +16,7 @@ import kotlin.math.log
 class LoginViewModel : ViewModel() {
 
     private val auth: FirebaseAuth = Firebase.auth;
+    var showAlert by mutableStateOf(false)
 
     fun login(email: String, password: String, onSuccess: () -> Unit) {
         viewModelScope.launch {
@@ -26,13 +30,17 @@ class LoginViewModel : ViewModel() {
                                 "LoginViewModel",
                                 "Error logging in Firebase " + task.exception?.localizedMessage
                             )
+                            showAlert = true
                         }
                     }
-                onSuccess()
             } catch (e: Exception) {
                 Log.e("LoginViewModel", "Error logging in " + e.localizedMessage)
             }
         }
 
+    }
+
+    fun closeAlert() {
+        showAlert = false
     }
 }

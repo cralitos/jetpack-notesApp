@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.notesapp.component.Alert
 import com.example.notesapp.viewmodel.LoginViewModel
 
 
@@ -67,6 +68,15 @@ fun LoginView(navController: NavController, loginViewModel: LoginViewModel) {
                 .padding(start = 30.dp, end = 30.dp)
         ) {
             Text("Login")
+        }
+        if (loginViewModel.showAlert) {
+            Alert(title = "Alerta",
+                confirmText = "Aceptar",
+                message = "Usuario o contraseña incorrectos",
+                onConfirmClick = { loginViewModel.closeAlert() }
+            ) {
+
+            }
         }
     }
 }
