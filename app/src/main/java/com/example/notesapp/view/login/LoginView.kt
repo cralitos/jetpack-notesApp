@@ -21,6 +21,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.notesapp.viewmodel.LoginViewModel
 
@@ -34,28 +35,36 @@ fun LoginView(navController: NavController, loginViewModel: LoginViewModel) {
         var email by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }
 
-        OutlinedTextField(value = email,
+        OutlinedTextField(
+            value = email,
             onValueChange = { email = it },
             label = { Text("Email") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-            modifier = Modifier.
-            fillMaxWidth()
-                .padding(start =30.dp, end = 30.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 30.dp, end = 30.dp)
         )
 
-        OutlinedTextField(value = password,
+        OutlinedTextField(
+            value = password,
             onValueChange = { password = it },
             label = { Text("Password") },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            modifier = Modifier.
-            fillMaxWidth()
-                .padding(start =30.dp, end = 30.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 30.dp, end = 30.dp)
         )
         Spacer(modifier = Modifier.height(20.dp))
-        Button(onClick = {},
-            modifier = Modifier.fillMaxWidth()
-                .padding(start =30.dp, end = 30.dp)
+        Button(
+            onClick = {
+                loginViewModel.login(email, password) {
+                    navController.navigate("home")
+                }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 30.dp, end = 30.dp)
         ) {
             Text("Login")
         }
